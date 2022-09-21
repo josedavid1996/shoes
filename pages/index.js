@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import { Suspense, useEffect, useRef, useState } from 'react'
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import TheeScene from '../components/TheeScene'
 import { OrbitControls, Stars } from '@react-three/drei'
 import Model from '../components/Model'
@@ -10,48 +10,55 @@ const MyInput = ({ field, form, ...props }) => {
   return <input {...field} {...props} />
 }
 export default function Home() {
-  const [nameColor, setNameColor] = useState('Amarillo')
-  const [modal, setmodal] = useState(false)
+  // const [nameColor, setNameColor] = useState('Amarillo')
+  // const [modal, setmodal] = useState(false)
+  console.log('hola')
   // console.log(initialValues)
-  const { values, setFieldValue, setValues, ...form } = useFormik({
-    onSubmit: () => {},
-    initialValues: {
-      color: 'conversetelaamarilla',
-      talla: '32'
-    }
+  // const { values, setFieldValue, setValues, ...form } = useFormik({
+  //   onSubmit: () => {},
+  //   initialValues: {
+  //     color: 'conversetelaamarilla',
+  //     talla: '32'
+  //   }
+  // })
+  const [values, setValues] = useState({
+    color: 'conversetelaamarilla',
+    talla: '32',
+    nameColor: 'Amarillo'
   })
-  useEffect(() => {
-    switch (values.color) {
-      case 'conversetelaamarilla':
-        setNameColor('Amarillo')
-        return
-      case 'conversetelaazul':
-        setNameColor('Azul')
-        return
-      case 'conversetelablanco':
-        setNameColor('Blanco')
-        return
-      case 'conversetelanegra':
-        setNameColor('Negro')
-        return
-      case 'conversetelaroja':
-        setNameColor('Rojo')
-        return
-      case 'conversetelaverder':
-        setNameColor('Verde')
-        return
-      case 'tample':
-        setNameColor('Tample')
-        return
-    }
-  }, [values.color])
-  console.log(nameColor)
+
+  // useEffect(() => {
+  //   switch (values.color) {
+  //     case 'conversetelaamarilla':
+  //       setNameColor('Amarillo')
+  //       return
+  //     case 'conversetelaazul':
+  //       setNameColor('Azul')
+  //       return
+  //     case 'conversetelablanco':
+  //       setNameColor('Blanco')
+  //       return
+  //     case 'conversetelanegra':
+  //       setNameColor('Negro')
+  //       return
+  //     case 'conversetelaroja':
+  //       setNameColor('Rojo')
+  //       return
+  //     case 'conversetelaverder':
+  //       setNameColor('Verde')
+  //       return
+  //     case 'tample':
+  //       setNameColor('Tample')
+  //       return
+  //   }
+  // }, [values.color])
+  // console.log(nameColor)
   const handleSubmit = (e) => {
     e.preventDefault()
-    setmodal(true)
-    setTimeout(() => {
-      setmodal(false)
-    }, 3000)
+    // setmodal(true)
+    // setTimeout(() => {
+    //   setmodal(false)
+    // }, 3000)
   }
   return (
     <>
@@ -63,7 +70,7 @@ export default function Home() {
 
       {/* MODAL */}
 
-      <div
+      {/* <div
         className={`${
           modal ? 'opacity-1' : 'opacity-0'
         } absolute w-64 h-64 bg-[#FF7733] top-0 right-0 m-4 p-2 rounded-lg  transition-all duration-700`}
@@ -78,14 +85,20 @@ export default function Home() {
         <p className="text-[20px] text-center font-[500]">
           Talla : {values.talla}
         </p>
-      </div>
+      </div> */}
+
       <div className=" flex justify-center items-center min-h-screen">
         <div className="w-[90%] h-[90vh] grid grid-cols-2 rounded-lg shadow-2xl">
           <div className="3d card">
             <TheeScene>
               <color attach="background" args={['#161c24']} />
               <Suspense fallback={null}>
-                <Model color={values.color} />
+                {useMemo(
+                  () => (
+                    <Model color={values.color} />
+                  ),
+                  [values.color]
+                )}
               </Suspense>
               <ambientLight />
               <OrbitControls autoRotate />
@@ -119,7 +132,11 @@ export default function Home() {
                 <select
                   value={values.color}
                   onChange={(e) => {
-                    setFieldValue('color', e.target.value)
+                    setValues({
+                      ...values,
+                      color: e.target.value,
+                      nameColor: e.target.name
+                    })
                   }}
                   className="p-2 border border-[#00000080] rounded-md"
                 >
@@ -137,7 +154,12 @@ export default function Home() {
                 <select
                   value={values.talla}
                   className="p-2 border border-[#00000080] rounded-md"
-                  onChange={(e) => setFieldValue('talla', e.target.value)}
+                  onChange={(e) =>
+                    setValues({
+                      ...values,
+                      talla: e.target.value
+                    })
+                  }
                 >
                   <option value="32">32</option>
                   <option value="34">34</option>

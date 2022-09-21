@@ -9,7 +9,7 @@ const Model = ({ color }) => {
   // const material = new THREE.MeshBasicMaterial({ map: texture })
   const obj = useLoader(OBJLoader, '/figure3d/converse2.obj')
   // const colorTexture = useTexture('/textura/converse.jpg')
-  const templa = new THREE.TextureLoader().load(`/textura/${color}.png`)
+  const templa = new THREE.TextureLoader().load(`/textura/${color}.webp`)
   obj.children[0].material = new THREE.MeshPhongMaterial({
     map: templa
   })
