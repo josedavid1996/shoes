@@ -4,61 +4,79 @@ import TheeScene from '../components/TheeScene'
 import { OrbitControls, Stars } from '@react-three/drei'
 import Model from '../components/Model'
 import IconStar from '../icons/IconStar'
-import { useFormik } from 'formik'
 
-const MyInput = ({ field, form, ...props }) => {
-  return <input {...field} {...props} />
-}
 export default function Home() {
-  // const [nameColor, setNameColor] = useState('Amarillo')
-  // const [modal, setmodal] = useState(false)
-  console.log('hola')
-  // console.log(initialValues)
-  // const { values, setFieldValue, setValues, ...form } = useFormik({
-  //   onSubmit: () => {},
-  //   initialValues: {
-  //     color: 'conversetelaamarilla',
-  //     talla: '32'
-  //   }
-  // })
+  const [nameColor, setNameColor] = useState('Amarillo')
+  const [nameColorCordones, setNameColorCordones] = useState('Negro')
+  const [modal, setmodal] = useState(false)
+
+  // valores iniciales del formulario
   const [values, setValues] = useState({
     color: 'conversetelaamarilla',
     talla: '32',
-    nameColor: 'Amarillo'
+    nameColor: 'Amarillo',
+    cordones: 'telanegra'
   })
 
-  // useEffect(() => {
-  //   switch (values.color) {
-  //     case 'conversetelaamarilla':
-  //       setNameColor('Amarillo')
-  //       return
-  //     case 'conversetelaazul':
-  //       setNameColor('Azul')
-  //       return
-  //     case 'conversetelablanco':
-  //       setNameColor('Blanco')
-  //       return
-  //     case 'conversetelanegra':
-  //       setNameColor('Negro')
-  //       return
-  //     case 'conversetelaroja':
-  //       setNameColor('Rojo')
-  //       return
-  //     case 'conversetelaverder':
-  //       setNameColor('Verde')
-  //       return
-  //     case 'tample':
-  //       setNameColor('Tample')
-  //       return
-  //   }
-  // }, [values.color])
-  // console.log(nameColor)
+  // useeffect para saber el color de los zapatos
+  useEffect(() => {
+    switch (values.color) {
+      case 'conversetelaamarilla':
+        setNameColor('Amarillo')
+        return
+      case 'conversetelaazul':
+        setNameColor('Azul')
+        return
+      case 'conversetelablanco':
+        setNameColor('Blanco')
+        return
+      case 'conversetelanegra':
+        setNameColor('Negro')
+        return
+      case 'conversetelaroja':
+        setNameColor('Rojo')
+        return
+      case 'conversetelaverder':
+        setNameColor('Verde')
+        return
+      case 'tample':
+        setNameColor('Tample')
+        return
+    }
+  }, [values.color])
+
+  // useeffect para saber el color de los cordones
+
+  useEffect(() => {
+    switch (values.cordones) {
+      case 'telaamarilla':
+        setNameColorCordones('Amarillo')
+        return
+      case 'telaazul':
+        setNameColorCordones('Azul')
+        return
+      case 'telablanca':
+        setNameColorCordones('Blanco')
+        return
+      case 'telanegra':
+        setNameColorCordones('Negro')
+        return
+      case 'telaroja':
+        setNameColorCordones('Rojo')
+        return
+      case 'telaverde':
+        setNameColorCordones('Verde')
+        return
+    }
+  }, [values.cordones])
+
+  // funcion del submit para mostar y ocultar el modal
   const handleSubmit = (e) => {
     e.preventDefault()
-    // setmodal(true)
-    // setTimeout(() => {
-    //   setmodal(false)
-    // }, 3000)
+    setmodal(true)
+    setTimeout(() => {
+      setmodal(false)
+    }, 3000)
   }
   return (
     <>
@@ -70,7 +88,7 @@ export default function Home() {
 
       {/* MODAL */}
 
-      {/* <div
+      <div
         className={`${
           modal ? 'opacity-1' : 'opacity-0'
         } absolute w-64 h-64 bg-[#FF7733] top-0 right-0 m-4 p-2 rounded-lg  transition-all duration-700`}
@@ -83,21 +101,28 @@ export default function Home() {
           Color : {nameColor}
         </p>
         <p className="text-[20px] text-center font-[500]">
+          Color de cordones : {nameColorCordones}
+        </p>
+        <p className="text-[20px] text-center font-[500]">
           Talla : {values.talla}
         </p>
-      </div> */}
+      </div>
 
       <div className=" flex justify-center items-center min-h-screen">
         <div className="w-[90%] h-[90vh] grid grid-cols-2 rounded-lg shadow-2xl">
           <div className="3d card">
+            {/* SCENE 3D */}
             <TheeScene>
               <color attach="background" args={['#161c24']} />
               <Suspense fallback={null}>
                 {useMemo(
                   () => (
-                    <Model color={values.color} />
+                    <Model
+                      color={values.color}
+                      colorCordones={values.cordones}
+                    />
                   ),
-                  [values.color]
+                  [values.color, values.cordones]
                 )}
               </Suspense>
               <ambientLight />
@@ -105,6 +130,8 @@ export default function Home() {
               <Stars />
             </TheeScene>
           </div>
+
+          {/* DESCRIPTCION Y FORMALIRIO */}
           <div className="description p-8">
             <h1 className="font-semibold text-3xl mb-4">
               Converse All Star en Zapatos para Hombre y Mujer
@@ -142,11 +169,31 @@ export default function Home() {
                 >
                   <option value="conversetelaamarilla">Amarillo</option>
                   <option value="conversetelaazul">Azul</option>
-                  <option value="conversetelablanco">Blanco</option>
+                  <option value="conversetelablanca">Blanco</option>
                   <option value="conversetelanegra">Negro</option>
                   <option value="conversetelaroja">Rojo</option>
                   <option value="conversetelaverder">Verde</option>
                   <option value="tample">Tample</option>
+                </select>
+              </div>
+              <div className="flex flex-col mb-2">
+                <label className="mb-1">Color de cordones:</label>
+                <select
+                  value={values.cordones}
+                  onChange={(e) => {
+                    setValues({
+                      ...values,
+                      cordones: e.target.value
+                    })
+                  }}
+                  className="p-2 border border-[#00000080] rounded-md"
+                >
+                  <option value="telaamarilla">Amarillo</option>
+                  <option value="telaazul">Azul</option>
+                  <option value="telablanca">Blanco</option>
+                  <option value="telanegra">Negro</option>
+                  <option value="telaroja">Rojo</option>
+                  <option value="telaverde">Verde</option>
                 </select>
               </div>
               <div className="flex flex-col mb-2">
